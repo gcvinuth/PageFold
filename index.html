@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#111318">
+  <meta name="description" content="A lightweight, offline-first PDF and comic book reader.">
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="icon" href="./icons/icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="./styles.css">
+  <title>Leaf — Reader</title>
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar">
+      <a class="brand" href="#" aria-label="Leaf home"><span class="brand-mark">L</span><span>leaf<span class="brand-dot">.</span></span></a>
+      <button class="nav-item active" data-view="library"><span>▦</span> Library</button>
+      <button class="nav-item" data-view="continue"><span>◷</span> Continue reading</button>
+      <div class="side-label">COLLECTIONS</div>
+      <div id="genre-list" class="genre-list"></div>
+      <button class="nav-item" id="add-genre"><span>＋</span> New collection</button>
+      <div class="sidebar-bottom">
+        <button class="nav-item" id="theme-toggle"><span id="theme-icon">◐</span> Toggle appearance</button>
+        <button class="nav-item" id="sync-open"><span>⇧</span> Cloud sync</button>
+        <div class="sync-state"><span class="status-dot"></span><span id="sync-status">Stored on this device</span></div>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <button class="icon-btn mobile-menu" id="mobile-menu" aria-label="Open menu">☰</button>
+        <div class="crumb"><span class="crumb-muted">Your space</span><span class="crumb-sep">/</span><strong id="page-heading">Library</strong></div>
+        <div class="top-actions">
+          <label class="searchbox"><span>⌕</span><input id="search" type="search" placeholder="Search your library" aria-label="Search library"></label>
+          <button class="icon-btn" id="import-btn" title="Import files" aria-label="Import files">＋</button>
+          <input id="file-input" type="file" accept="application/pdf,image/*" multiple hidden>
+          <button class="avatar" id="profile-btn" title="Reader settings">✦</button>
+        </div>
+      </header>
+
+      <section class="library-view" id="library-view">
+        <div class="hero">
+          <div>
+            <div class="eyebrow"><span class="eyebrow-line"></span> YOUR PERSONAL SHELF</div>
+            <h1>A little space<br>to <em>get lost.</em></h1>
+            <p class="hero-copy">Your stories, comics, and documents — all in one quiet place.</p>
+            <button class="primary-btn" id="hero-import"><span>＋</span> Add to library</button>
+          </div>
+          <div class="hero-art" aria-hidden="true">
+            <div class="orbit orbit-one"></div><div class="orbit orbit-two"></div>
+            <div class="book book-back"></div><div class="book book-mid"></div>
+            <div class="book book-front"><div class="book-spine"></div><div class="cover-sun"></div><div class="cover-lines"></div><span>THE<br>OTHER<br>SIDE</span></div>
+            <div class="spark spark-a">✳</div><div class="spark spark-b">✦</div>
+          </div>
+        </div>
+
+        <div id="continue-section" class="content-section hidden">
+          <div class="section-heading"><div><div class="eyebrow">PICK UP WHERE YOU LEFT OFF</div><h2>Continue reading</h2></div></div>
+          <div id="continue-grid" class="book-grid"></div>
+        </div>
+        <div class="content-section">
+          <div class="section-heading"><div><div class="eyebrow" id="shelf-eyebrow">YOUR COLLECTION</div><h2 id="shelf-title">On your shelf <span id="book-count" class="count-pill">0</span></h2></div>
+            <div class="view-controls"><select id="sort-select" aria-label="Sort library"><option value="recent">Recently added</option><option value="title">Title A–Z</option><option value="progress">Reading progress</option></select><button class="icon-btn view-toggle active" data-layout="grid" title="Grid view">▦</button><button class="icon-btn view-toggle" data-layout="list" title="List view">☷</button></div>
+          </div>
+          <div id="book-grid" class="book-grid"></div>
+          <div id="empty-state" class="empty-state"><div class="empty-icon">↗</div><h3>Your shelf is waiting.</h3><p>Drop in a PDF or a few comic pages to start your collection.</p><button class="primary-btn" id="empty-import">＋ Import a file</button><small>Files stay on this device. Reading works offline after import.</small></div>
+        </div>
+      </section>
+
+      <section class="reader-view hidden" id="reader-view">
+        <div class="reader-toolbar">
+          <button class="icon-btn" id="back-library" aria-label="Back to library">←</button>
+          <div class="reader-title"><strong id="reader-doc-title">Untitled</strong><span id="reader-page-label">Page 1</span></div>
+          <div class="reader-controls">
+            <button class="icon-btn" id="bookmark-btn" title="Bookmark this page" aria-label="Bookmark this page">♧</button>
+            <button class="icon-btn" id="zoom-out" title="Zoom out">−</button><button class="zoom-label" id="zoom-label">100%</button><button class="icon-btn" id="zoom-in" title="Zoom in">＋</button>
+            <button class="icon-btn" id="reader-theme" title="Toggle dark mode">◐</button>
+            <button class="icon-btn" id="reader-menu" title="More options">⋯</button>
+          </div>
+        </div>
+        <div class="reader-stage" id="reader-stage">
+          <button class="page-arrow page-prev" id="prev-page" aria-label="Previous page">‹</button>
+          <div class="page-wrap" id="page-wrap">
+            <div class="page-shadow"></div>
+            <div class="page-surface" id="page-surface"><div class="page-placeholder">Choose a book from your shelf</div></div>
+          </div>
+          <button class="page-arrow page-next" id="next-page" aria-label="Next page">›</button>
+          <div class="reader-hint" id="reader-hint">Swipe or use ← → to turn pages</div>
+        </div>
+        <div class="reader-bottom">
+          <span id="progress-text">0%</span><input id="page-range" type="range" min="1" max="1" value="1" aria-label="Page position"><span id="total-pages">1 page</span>
+          <button class="icon-btn" id="bookmarks-open" title="Bookmarks">♧</button>
+        </div>
+        <div class="reader-popover hidden" id="reader-popover"><button id="bookmark-list">View bookmarks</button><button id="download-current">Download original file</button><button id="reader-close">Close reader</button></div>
+      </section>
+    </main>
+  </div>
+
+  <div class="modal-backdrop hidden" id="modal-backdrop">
+    <section class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+      <button class="modal-close" id="modal-close" aria-label="Close dialog">×</button>
+      <div class="eyebrow">LEAF READER</div><h2 id="modal-title">New collection</h2><p id="modal-copy">Create a space for your favorite stories.</p>
+      <div id="modal-body"><label class="field-label" for="modal-input">Collection name</label><input class="field-input" id="modal-input" placeholder="e.g. Fantasy comics"></div>
+      <div class="modal-actions"><button class="secondary-btn" id="modal-cancel">Cancel</button><button class="primary-btn" id="modal-confirm">Create</button></div>
+    </section>
+  </div>
+  <div class="toast" id="toast" role="status"></div>
+  <script type="module" src="./app.js"></script>
+</body>
+</html>

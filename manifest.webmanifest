@@ -1,0 +1,19 @@
+{
+  "name": "Leaf \u2014 PDF & Comic Reader",
+  "short_name": "Leaf Reader",
+  "description": "A lightweight offline-first PDF and comic reader",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f6f5f1",
+  "theme_color": "#111318",
+  "orientation": "any",
+  "icons": [
+    {
+      "src": "./icons/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
